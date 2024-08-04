@@ -4,11 +4,12 @@ import DotPattern from "@/components/magicui/dot-pattern";
 import {BorderBeam} from "@/components/magicui/border-beam";
 import React from "react";
 import {Button} from "@/components/ui/button";
-import {useRouter} from "next/navigation";
+import {useRouter, useSearchParams} from "next/navigation";
 
 const DotPatternDemo2 = () => {
   const router = useRouter();
-
+  const searchParams = useSearchParams();
+  const email = searchParams.get("email");
   return (
     <div
       className="relative flex min-h-screen w-full items-center justify-center overflow-hidden bg-background p-20 md:shadow-xl">
@@ -32,13 +33,13 @@ const DotPatternDemo2 = () => {
 
           <div className={"w-full flex items-center justify-between"}>
             <Button variant={"outline"} className={"text-center"} onClick={() => router.back()}>Edit response</Button>
-            <Button variant={"outline"} className={"text-center"} onClick={() => router.back()}>
+            <Button variant={"outline"} className={"text-center"}
+                    onClick={() => router.push(`previous-response?email=${email}`, {scroll: false})}>
               View previous response
             </Button>
           </div>
         </div>
       </div>
-
     </div>
   );
 };

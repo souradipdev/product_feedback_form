@@ -16,6 +16,8 @@ import {useToast} from "@/components/ui/use-toast";
 import {ApiResponseHandler} from "@/lib/ApiResponseHandler";
 import {useRouter} from "next/navigation";
 
+export let formDataExport: z.infer<typeof FormSchema>;
+
 function Form() {
   const router = useRouter();
   const {toast} = useToast();
@@ -50,8 +52,14 @@ function Form() {
 
     try {
       const response = await axios.post<ApiResponseHandler>("/api/store-form-fields", formData);
+      toast({
+        variant: "default",
+        title: "Success",
+        description: response.data.message
+      })
 
-      router.push('/submit-response', { scroll: false });
+      formDataExport = formData;
+      router.push(`/submit-response?email=${formData.email}`, {scroll: false});
     } catch (error: any) {
       const axiosError = error as AxiosError<ApiResponseHandler>;
       toast({
@@ -175,3 +183,4 @@ function Form() {
 }
 
 export default Form;
+
