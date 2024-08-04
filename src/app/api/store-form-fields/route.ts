@@ -13,7 +13,7 @@ export async function POST(request: Request): Promise<Response> {
     const parsedData = FormSchema.parse(formData);
 
     const existingUser = await FormModel.findOne({
-      $or: [{email: formData.email}, {phone: formData.phone}]
+      $or: [{email: formData.email}, {username: formData.username}]
     })
 
     if (existingUser) {
@@ -25,14 +25,14 @@ export async function POST(request: Request): Promise<Response> {
         })
 
       return Response.json(new ApiResponseHandler(true, "Response updated successfully", {}),
-        {status: 204})
+        {status: 200})
     } else {
       const newForm = new FormModel(parsedData);
       await newForm.save();
     }
 
     return Response.json(new ApiResponseHandler(true, "Response saved successfully", {}),
-      {status: 201}
+      {status: 200}
     )
   } catch (error: any) {
     console.error("Error saving form data:", error);

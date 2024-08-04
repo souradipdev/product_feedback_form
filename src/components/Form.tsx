@@ -48,7 +48,7 @@ function Form() {
   const recommend = watch("recommend");
 
   const onSubmit: SubmitHandler<z.infer<typeof FormSchema>> = async (formData: z.infer<typeof FormSchema>) => {
-    console.log(formData);
+    // console.log(formData);
 
     try {
       const response = await axios.post<ApiResponseHandler>("/api/store-form-fields", formData);
@@ -59,7 +59,7 @@ function Form() {
       })
 
       formDataExport = formData;
-      router.push(`/submit-response?email=${formData.email}`, {scroll: false});
+      router.push(`/submit-response?username=${formData.email}`, {scroll: false});
     } catch (error: any) {
       const axiosError = error as AxiosError<ApiResponseHandler>;
       toast({
