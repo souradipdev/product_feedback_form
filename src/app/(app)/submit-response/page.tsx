@@ -1,4 +1,5 @@
 "use client"
+import {Suspense} from "react";
 import {cn} from "@/lib/utils";
 import DotPattern from "@/components/magicui/dot-pattern";
 import {BorderBeam} from "@/components/magicui/border-beam";
@@ -44,4 +45,13 @@ const DotPatternDemo2 = () => {
   );
 };
 
-export default DotPatternDemo2;
+const ViewSubmitResponsePage = () => {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      < DotPatternDemo2/>
+    </Suspense>
+  );
+};
+
+export default ViewSubmitResponsePage;
+

@@ -1,10 +1,10 @@
 "use client";
-import React, { useEffect } from "react";
+import React, { useEffect, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Rating } from "@mui/material";
 import { useForm } from "react-hook-form";
 import { FormSchema } from "@/schema/FormSchema";
-import {zodResolver} from "@hookform/resolvers/zod";
+import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -58,8 +58,8 @@ const ViewResponseForm = () => {
           toast({
             variant: "default",
             title: "Success",
-            description: response.data.message
-          })
+            description: response.data.message,
+          });
 
           for (const key in data) {
             setValue(key as keyof z.infer<typeof FormSchema>, data[key]);
@@ -153,4 +153,12 @@ const ViewResponseForm = () => {
   );
 }
 
-export default ViewResponseForm;
+const ViewResponsePage = () => {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <ViewResponseForm />
+    </Suspense>
+  );
+};
+
+export default ViewResponsePage;
