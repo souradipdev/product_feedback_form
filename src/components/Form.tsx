@@ -14,8 +14,12 @@ import {Textarea} from "@/components/ui/textarea";
 import axios, {AxiosError} from "axios";
 import {useToast} from "@/components/ui/use-toast";
 import {ApiResponseHandler} from "@/lib/ApiResponseHandler";
+import {useRouter} from "next/navigation";
 
 function Form() {
+  const router = useRouter();
+  const {toast} = useToast();
+
   const {
     register,
     handleSubmit,
@@ -35,13 +39,11 @@ function Form() {
       customerRecomendation: ""
     },
   });
-
   const satisfactionRating = watch("satisfactionRating");
   const easeOfUse = watch("easeOfUse");
   const featureCompleteness = watch("featureCompleteness");
-  const recommend = watch("recommend");
 
-  const {toast} = useToast();
+  const recommend = watch("recommend");
 
   const onSubmit: SubmitHandler<z.infer<typeof FormSchema>> = async (formData: z.infer<typeof FormSchema>) => {
     console.log(formData);
@@ -49,6 +51,7 @@ function Form() {
     try {
       const response = await axios.post<ApiResponseHandler>("/api/store-form-fields", formData);
 
+      router.push('/submit-response', { scroll: false });
     } catch (error: any) {
       const axiosError = error as AxiosError<ApiResponseHandler>;
       toast({
@@ -150,7 +153,7 @@ function Form() {
                 <Label htmlFor="option-no">No</Label>
               </div>
             </RadioGroup>
-            {errors.recommend && <span className="text-red-500 self-start text-sm">\
+            {errors.recommend && <span className="text-red-500 self-start text-sm">
               {errors.recommend.message}
             </span>}
           </div>
