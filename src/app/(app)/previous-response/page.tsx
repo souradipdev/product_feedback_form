@@ -1,34 +1,34 @@
 "use client";
-import React, { useEffect, Suspense } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
-import { Rating } from "@mui/material";
-import { useForm } from "react-hook-form";
-import { FormSchema } from "@/schema/FormSchema";
-import { zodResolver } from "@hookform/resolvers/zod";
+import React, {useEffect, Suspense} from "react";
+import {useRouter, useSearchParams} from "next/navigation";
+import {Rating} from "@mui/material";
+import {useForm} from "react-hook-form";
+import {FormSchema} from "@/schema/FormSchema";
+import {zodResolver} from "@hookform/resolvers/zod";
 import * as z from "zod";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
-import { BorderBeam } from "@/components/magicui/border-beam";
-import { RadioGroupItem, RadioGroup } from "@/components/ui/radio-group";
-import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
-import { useToast } from "@/components/ui/use-toast";
-import { cn } from "@/lib/utils";
+import {Input} from "@/components/ui/input";
+import {Button} from "@/components/ui/button";
+import {BorderBeam} from "@/components/magicui/border-beam";
+import {RadioGroupItem, RadioGroup} from "@/components/ui/radio-group";
+import {Label} from "@/components/ui/label";
+import {Textarea} from "@/components/ui/textarea";
+import {useToast} from "@/components/ui/use-toast";
+import {cn} from "@/lib/utils";
 import DotPattern from "@/components/magicui/dot-pattern";
-import axios, { AxiosError } from "axios";
-import { ApiResponseHandler } from "@/lib/ApiResponseHandler";
+import axios, {AxiosError} from "axios";
+import {ApiResponseHandler} from "@/lib/ApiResponseHandler";
 
 const ViewResponseForm = () => {
   const searchParams = useSearchParams();
   const email = searchParams.get("email");
   const router = useRouter();
-  const { toast } = useToast();
+  const {toast} = useToast();
 
   const {
     register,
     setValue,
     watch,
-    formState: { errors },
+    formState: {errors},
   } = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
     defaultValues: {
@@ -39,6 +39,7 @@ const ViewResponseForm = () => {
       easeOfUse: 0,
       featureCompleteness: 0,
       recommend: undefined,
+      usage: undefined,
       customerRecomendation: "",
     },
   });
@@ -47,6 +48,7 @@ const ViewResponseForm = () => {
   const easeOfUse = watch("easeOfUse");
   const featureCompleteness = watch("featureCompleteness");
   const recommend = watch("recommend");
+  const usage = watch("usage");
 
   useEffect(() => {
     if (email) {
@@ -78,7 +80,8 @@ const ViewResponseForm = () => {
   }, [email, setValue, toast]);
 
   return (
-    <div className="relative flex min-h-screen w-full items-center justify-center overflow-hidden bg-background p-20 md:shadow-xl">
+    <div
+      className="relative flex min-h-screen w-full items-center justify-center overflow-hidden bg-background p-20 md:shadow-xl">
       <DotPattern
         width={20}
         height={20}
@@ -88,59 +91,84 @@ const ViewResponseForm = () => {
         className={cn("[mask-image:linear-gradient(to_bottom_right,white,transparent,transparent)] bg-gray-950")}
       />
       <div className="z-10 w-[90%] h-fit flex items-center justify-center">
-        <div className="w-full h-fit relative flex flex-col items-center border border-gray-300 bg-white bg-opacity-70 backdrop-blur-lg rounded-lg shadow-lg p-6">
-          <BorderBeam size={900} borderWidth={2} />
+        <div
+          className="w-full h-fit relative flex flex-col items-center border border-gray-300 bg-white bg-opacity-70 backdrop-blur-lg rounded-lg shadow-lg p-6">
+          <BorderBeam size={900} borderWidth={2}/>
           <h2 className="text-2xl font-bold text-secondary-foreground">Expense Master</h2>
           <p className="pt-3.5 font-semibold text-muted-foreground text-center max-w-96 mb-4">Your response</p>
           <form className="w-full flex flex-col items-center gap-3.5">
             <div className="w-full flex flex-col gap-2.5 items-center">
               <span className="text-gray-900 self-start text-sm">Username *</span>
-              <Input type="text" {...register("name")} className="bg-white" placeholder="ie: John Doe" disabled />
+              <Input type="text" {...register("name")} className="bg-white" placeholder="ie: John Doe" disabled/>
             </div>
             <div className="w-full flex flex-col gap-3 items-center">
               <span className="text-gray-900 self-start text-sm">Email *</span>
-              <Input type="text" {...register("email")} className="bg-white" placeholder="ie: johndoe@gmail.com" disabled />
+              <Input type="text" {...register("email")} className="bg-white" placeholder="ie: johndoe@gmail.com"
+                     disabled/>
             </div>
             <div className="w-full flex flex-col gap-3 items-center">
               <span className="text-gray-900 self-start text-sm">Phone</span>
-              <Input type="text" {...register("phone")} className="bg-white" placeholder="ie: 123-456-7890" disabled />
+              <Input type="text" {...register("phone")} className="bg-white" placeholder="ie: 123-456-7890" disabled/>
             </div>
             <p className={"w-full h-[1px] bg-muted-foreground"}></p>
             <div className="w-full flex-col items-center">
               <span className="text-gray-900 self-start text-sm">Overall satisfaction with Expense Master *</span>
               <div className="w-full py-1.5">
-                <Rating name="satisfactionRating" value={satisfactionRating || 0} readOnly />
+                <Rating name="satisfactionRating" value={satisfactionRating || 0} readOnly/>
               </div>
             </div>
             <div className="w-full flex-col items-center">
               <span className="text-gray-900 self-start text-sm">Ease of use *</span>
               <div className="w-full py-1.5">
-                <Rating name="easeOfUse" value={easeOfUse || 0} readOnly />
+                <Rating name="easeOfUse" value={easeOfUse || 0} readOnly/>
               </div>
             </div>
             <div className="w-full flex-col items-center">
               <span className="text-gray-900 self-start text-sm">Feature completeness *</span>
               <div className="w-full py-1.5">
-                <Rating name="featureCompleteness" value={featureCompleteness || 0} readOnly />
+                <Rating name="featureCompleteness" value={featureCompleteness || 0} readOnly/>
               </div>
             </div>
+
             <p className={"w-full h-[1px] bg-muted-foreground"}></p>
+
             <div className="w-full flex flex-col gap-3 items-center">
               <span className="text-gray-900 self-start text-sm">Will you recommend our product to your friend *</span>
               <RadioGroup className="self-start" value={recommend || ""}>
                 <div className="flex items-center space-x-2">
-                  <RadioGroupItem value="yes" id="option-yes" disabled />
-                  <Label htmlFor="option-yes">Yes</Label>
+                  <RadioGroupItem value="yes" id="option-1" disabled/>
+                  <Label htmlFor="option-1">Yes</Label>
                 </div>
                 <div className="flex items-center space-x-2">
-                  <RadioGroupItem value="no" id="option-no" disabled />
-                  <Label htmlFor="option-no">No</Label>
+                  <RadioGroupItem value="no" id="option-2" disabled/>
+                  <Label htmlFor="option-2">No</Label>
                 </div>
               </RadioGroup>
             </div>
+
+            <div className="w-full flex flex-col gap-3 items-center">
+              <span className="text-gray-900 self-start text-sm">Will you recommend our product to your friend *</span>
+              <RadioGroup className="self-start" value={usage || ""}>
+                <div className="flex items-center space-x-2">
+                  <RadioGroupItem value="Less than 1 month" id="option-3" disabled/>
+                  <Label htmlFor="option-3">Less than 1 month</Label>
+                </div>
+                <div className="flex items-center space-x-2">
+                  <RadioGroupItem value="Less than 1 year" id="option-4" disabled/>
+                  <Label htmlFor="option-4">Less than 1 year</Label>
+                </div>
+                <div className="flex items-center space-x-2">
+                  <RadioGroupItem value="More than 1 year" id="option-5" disabled/>
+                  <Label htmlFor="option-5">More than 1 year</Label>
+                </div>
+              </RadioGroup>
+            </div>
+
+
             <div className="w-full flex flex-col gap-2.5 items-center">
               <span className="text-gray-900 self-start text-sm">How can we improve your overall experience with Expense Master?</span>
-              <Textarea {...register("customerRecomendation")} className={"resize-none h-32"} placeholder={"Your recommendation"} disabled />
+              <Textarea {...register("customerRecomendation")} className={"resize-none h-32"}
+                        placeholder={"Your recommendation"} disabled/>
             </div>
           </form>
 
@@ -156,7 +184,7 @@ const ViewResponseForm = () => {
 const ViewResponsePage = () => {
   return (
     <Suspense fallback={<div>Loading...</div>}>
-      <ViewResponseForm />
+      <ViewResponseForm/>
     </Suspense>
   );
 };

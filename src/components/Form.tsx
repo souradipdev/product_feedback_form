@@ -38,14 +38,15 @@ function Form() {
       easeOfUse: 0,
       featureCompleteness: 0,
       recommend: undefined,
+      usage: undefined,
       customerRecomendation: ""
     },
   });
   const satisfactionRating = watch("satisfactionRating");
   const easeOfUse = watch("easeOfUse");
   const featureCompleteness = watch("featureCompleteness");
-
   const recommend = watch("recommend");
+  const usage = watch("usage");
 
   const onSubmit: SubmitHandler<z.infer<typeof FormSchema>> = async (formData: z.infer<typeof FormSchema>) => {
     // console.log(formData);
@@ -59,7 +60,7 @@ function Form() {
       })
 
       formDataExport = formData;
-      router.push(`/submit-response?username=${formData.email}`, {scroll: false});
+      router.push(`/submit-response?email=${formData.email}`, {scroll: false});
     } catch (error: any) {
       const axiosError = error as AxiosError<ApiResponseHandler>;
       toast({
@@ -153,16 +154,43 @@ function Form() {
               }}
             >
               <div className="flex items-center space-x-2">
-                <RadioGroupItem value="yes" id="option-yes"/>
-                <Label htmlFor="option-yes">Yes</Label>
+                <RadioGroupItem value="yes" id="option-1"/>
+                <Label htmlFor="option-1">Yes</Label>
               </div>
               <div className="flex items-center space-x-2">
-                <RadioGroupItem value="no" id="option-no"/>
-                <Label htmlFor="option-no">No</Label>
+                <RadioGroupItem value="no" id="option-2"/>
+                <Label htmlFor="option-2">No</Label>
               </div>
             </RadioGroup>
             {errors.recommend && <span className="text-red-500 self-start text-sm">
               {errors.recommend.message}
+            </span>}
+          </div>
+
+          <div className="w-full flex flex-col gap-3 items-center">
+            <span className="text-gray-900 self-start text-sm">Will you recommend our product to your friend *</span>
+            <RadioGroup
+              className="self-start"
+              value={usage || ""}
+              onValueChange={(value) => {
+                setValue("usage", value as "Less than 1 month" | "Less than 1 year" | "More than 1 year");
+              }}
+            >
+              <div className="flex items-center space-x-2">
+                <RadioGroupItem value="Less than 1 month" id="option-3"/>
+                <Label htmlFor="option-3">Less than 1 month</Label>
+              </div>
+              <div className="flex items-center space-x-2">
+                <RadioGroupItem value="Less than 1 year" id="option-4"/>
+                <Label htmlFor="option-4">Less than 1 year</Label>
+              </div>
+              <div className="flex items-center space-x-2">
+                <RadioGroupItem value="More than 1 year" id="option-5"/>
+                <Label htmlFor="option-5">More than 1 year</Label>
+              </div>
+            </RadioGroup>
+            {errors.usage && <span className="text-red-500 self-start text-sm">
+              {errors.usage.message}
             </span>}
           </div>
 
