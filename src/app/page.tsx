@@ -1,6 +1,8 @@
-import { cn } from "@/lib/utils";
+import {cn} from "@/lib/utils";
 import DotPattern from "@/components/magicui/dot-pattern";
-const  DotPatternDemo2 = () => {
+import Form from "@/components/Form";
+
+const DotPatternDemo2 = () => {
   return (
     <div
       className="relative flex h-screen w-full items-center justify-center overflow-hidden bg-background p-20 md:shadow-xl">
@@ -14,11 +16,7 @@ const  DotPatternDemo2 = () => {
           "[mask-image:linear-gradient(to_bottom_right,white,transparent,transparent)] bg-gray-950",
         )}
       />
-      {/*<p
-        className="z-10 h-full whitespace-pre-wrap text-center text-5xl font-medium tracking-tighter text-black dark:text-white ">
-        Dot Pattern
-      </p>*/}
-
+      <Form/>
     </div>
   );
 };
