@@ -49,7 +49,7 @@ function Form() {
         <BorderBeam size={900} borderWidth={2} />
         <h2 className="text-2xl font-bold text-secondary-foreground">Expense Master</h2>
         <p className="pt-3.5 font-semibold text-muted-foreground text-center max-w-96 mb-4">
-          Your feedback matters. It won't take more than 3 minutes of your valuable time
+          Your feedback matters. It won&apos;t take more than 3 minutes of your valuable time
         </p>
         <form className="w-full flex flex-col items-center gap-3.5" onSubmit={handleSubmit(onSubmit)}>
           <div className="w-full flex flex-col gap-2.5 items-center">
