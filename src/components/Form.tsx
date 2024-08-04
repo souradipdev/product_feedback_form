@@ -1,16 +1,19 @@
 "use client"
 import React from "react";
-import { Rating } from "@mui/material";
-import { SubmitHandler, useForm } from "react-hook-form";
-import { FormSchema } from "@/schema/FormSchema";
-import { zodResolver } from "@hookform/resolvers/zod";
+import {Rating} from "@mui/material";
+import {SubmitHandler, useForm} from "react-hook-form";
+import {FormSchema} from "@/schema/FormSchema";
+import {zodResolver} from "@hookform/resolvers/zod";
 import * as z from "zod";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
-import { BorderBeam } from "@/components/magicui/border-beam";
-import { RadioGroupItem, RadioGroup } from "@/components/ui/radio-group";
-import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
+import {Input} from "@/components/ui/input";
+import {Button} from "@/components/ui/button";
+import {BorderBeam} from "@/components/magicui/border-beam";
+import {RadioGroupItem, RadioGroup} from "@/components/ui/radio-group";
+import {Label} from "@/components/ui/label";
+import {Textarea} from "@/components/ui/textarea";
+import axios, {AxiosError} from "axios";
+import {useToast} from "@/components/ui/use-toast";
+import {ApiResponseHandler} from "@/lib/ApiResponseHandler";
 
 function Form() {
   const {
@@ -18,7 +21,7 @@ function Form() {
     handleSubmit,
     setValue,
     watch,
-    formState: { errors, isSubmitting },
+    formState: {errors, isSubmitting},
   } = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
     defaultValues: {
@@ -38,35 +41,48 @@ function Form() {
   const featureCompleteness = watch("featureCompleteness");
   const recommend = watch("recommend");
 
-  const onSubmit: SubmitHandler<z.infer<typeof FormSchema>> = async (data: z.infer<typeof FormSchema>) => {
-    console.log(data);
+  const {toast} = useToast();
+
+  const onSubmit: SubmitHandler<z.infer<typeof FormSchema>> = async (formData: z.infer<typeof FormSchema>) => {
+    console.log(formData);
+
+    try {
+      const response = await axios.post<ApiResponseHandler>("/api/store-form-fields", formData);
+
+    } catch (error: any) {
+      const axiosError = error as AxiosError<ApiResponseHandler>;
+      toast({
+        variant: "destructive",
+        description: axiosError.response?.data.message || "Failed to save response"
+      });
+    }
   };
 
   return (
     <div className="z-10 w-[90%] h-fit flex items-center justify-center">
       <div
         className="w-full h-fit relative flex flex-col items-center border border-gray-300 bg-white bg-opacity-70 backdrop-blur-lg rounded-lg shadow-lg p-6">
-        <BorderBeam size={900} borderWidth={2} />
+        <BorderBeam size={900} borderWidth={2}/>
         <h2 className="text-2xl font-bold text-secondary-foreground">Expense Master</h2>
         <p className="pt-3.5 font-semibold text-muted-foreground text-center max-w-96 mb-4">
-          Your feedback matters. It won't take more than 3 minutes of your valuable time
+          Your feedback matters. It won&apos;t take more than 3 minutes of your valuable time
         </p>
         <form className="w-full flex flex-col items-center gap-3.5" onSubmit={handleSubmit(onSubmit)}>
           <div className="w-full flex flex-col gap-2.5 items-center">
             <span className="text-gray-900 self-start text-sm">Username *</span>
-            <Input type="text" {...register("name")} className="bg-white" placeholder="ie: John Doe" />
+            <Input type="text" {...register("name")} className="bg-white" placeholder="ie: John Doe"/>
             {errors && <span className="text-red-500 self-start text-sm">{errors.name?.message}</span>}
           </div>
 
           <div className="w-full flex flex-col gap-3 items-center">
             <span className="text-gray-900 self-start text-sm">Email *</span>
-            <Input type="text" {...register("email")} className="bg-white" placeholder="ie: johndoe@gmail.com" />
+            <Input type="text" {...register("email")} className="bg-white" placeholder="ie: johndoe@gmail.com"/>
             {errors && <span className="text-red-500 self-start text-sm">{errors.email?.message}</span>}
           </div>
 
           <div className="w-full flex flex-col gap-3 items-center">
             <span className="text-gray-900 self-start text-sm">Phone</span>
-            <Input type="text" {...register("phone")} className="bg-white" placeholder="ie: 123-456-7890" />
+            <Input type="text" {...register("phone")} className="bg-white" placeholder="ie: 123-456-7890"/>
             {errors && <span className="text-red-500 self-start text-sm">{errors.phone?.message}</span>}
           </div>
 
@@ -126,20 +142,23 @@ function Form() {
               }}
             >
               <div className="flex items-center space-x-2">
-                <RadioGroupItem value="yes" id="option-yes" />
+                <RadioGroupItem value="yes" id="option-yes"/>
                 <Label htmlFor="option-yes">Yes</Label>
               </div>
               <div className="flex items-center space-x-2">
-                <RadioGroupItem value="no" id="option-no" />
+                <RadioGroupItem value="no" id="option-no"/>
                 <Label htmlFor="option-no">No</Label>
               </div>
             </RadioGroup>
-            {errors.recommend && <span className="text-red-500 self-start text-sm">{errors.recommend.message}</span>}
+            {errors.recommend && <span className="text-red-500 self-start text-sm">\
+              {errors.recommend.message}
+            </span>}
           </div>
 
           <div className="w-full flex flex-col gap-2.5 items-center">
             <span className="text-gray-900 self-start text-sm">How can we improve your overall experience with Expense Master?</span>
-            <Textarea {...register("customerRecomendation")} className={"resize-none h-32"} placeholder={"Your recommendation"} />
+            <Textarea {...register("customerRecomendation")} className={"resize-none h-32"}
+                      placeholder={"Your recommendation"}/>
             {errors && <span className="text-red-500 self-start text-sm">{errors.customerRecomendation?.message}</span>}
           </div>
 
