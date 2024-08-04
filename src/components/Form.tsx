@@ -28,7 +28,7 @@ function Form() {
       satisfactionRating: 0,
       easeOfUse: 0,
       featureCompleteness: 0,
-      recommend: "no",
+      recommend: undefined,
       customerRecomendation: ""
     },
   });
@@ -49,7 +49,7 @@ function Form() {
         <BorderBeam size={900} borderWidth={2} />
         <h2 className="text-2xl font-bold text-secondary-foreground">Expense Master</h2>
         <p className="pt-3.5 font-semibold text-muted-foreground text-center max-w-96 mb-4">
-          Your feedback matters. It won&apos;t take more than 3 minutes of your valuable time
+          Your feedback matters. It won't take more than 3 minutes of your valuable time
         </p>
         <form className="w-full flex flex-col items-center gap-3.5" onSubmit={handleSubmit(onSubmit)}>
           <div className="w-full flex flex-col gap-2.5 items-center">
@@ -117,10 +117,10 @@ function Form() {
           <p className={"w-full h-[1px] bg-muted-foreground"}></p>
 
           <div className="w-full flex flex-col gap-3 items-center">
-            <span className="text-gray-900 self-start text-sm">Will you recommend our product to your friend</span>
+            <span className="text-gray-900 self-start text-sm">Will you recommend our product to your friend *</span>
             <RadioGroup
               className="self-start"
-              value={recommend}
+              value={recommend || ""}
               onValueChange={(value) => {
                 setValue("recommend", value as "yes" | "no");
               }}
@@ -139,8 +139,7 @@ function Form() {
 
           <div className="w-full flex flex-col gap-2.5 items-center">
             <span className="text-gray-900 self-start text-sm">How can we improve your overall experience with Expense Master?</span>
-            <Textarea {...register("customerRecomendation")} className={"resize-none h-36"}
-                      placeholder={"Your recommendation"} />
+            <Textarea {...register("customerRecomendation")} className={"resize-none h-32"} placeholder={"Your recommendation"} />
             {errors && <span className="text-red-500 self-start text-sm">{errors.customerRecomendation?.message}</span>}
           </div>
 

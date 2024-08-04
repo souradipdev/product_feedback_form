@@ -8,6 +8,6 @@ export const FormSchema = z.object({
   easeOfUse: z.number().min(1, {message: "Rating required"}),
   featureCompleteness: z.number().min(1, {message: "Rating required"}),
 
-  recommend: z.union([z.literal("yes"), z.literal("no")]),
+  recommend: z.union([z.literal("yes"), z.literal("no"), z.undefined()]).refine(val => val === "yes" || val === "no", {message: "Select an option"}),
   customerRecomendation: z.string()
 })
